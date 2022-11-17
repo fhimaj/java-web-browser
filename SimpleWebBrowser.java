@@ -104,7 +104,7 @@ public class SimpleWebBrowser extends JPanel {
         toolbar.setFloatable(false);
         add(toolbar,BorderLayout.NORTH);
         ActionListener goListener = new GoListener();
-        locationInput = new JTextField("www.sourcecodester.com", 40);
+        locationInput = new JTextField("www.google.com", 40);
         locationInput.addActionListener(goListener);
         JButton goButton = new JButton(" Go ");
         goButton.addActionListener(goListener);
