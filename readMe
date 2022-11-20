@@ -1,0 +1,8 @@
+A simple Java web browser using JWebView.
+
+Resources needed for further development are jdk-19 and javafx19.
+Instructions to install openjfx19: https://openjfx.io/openjfx-docs/#install-javafx.
+You can install jdk-19 from inside IntelliJ. You can use openjdk-19.
+
+To properly configure project in IntelliJ you need to set javafx lib path and add VM option on run configurations.
+To set run configuration, edit run configurations and add VM option : "--module-path 'path-to-jfx-lib\openjfx-19_windows-x64_bin-sdk\javafx-sdk-19\lib' --add-modules=javafx.controls,javafx.base,javafx.graphics,javafx.media,javafx.web".
