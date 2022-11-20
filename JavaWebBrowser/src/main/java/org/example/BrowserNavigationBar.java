@@ -1,7 +1,5 @@
 package org.example;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -12,10 +10,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.HBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.FileChooser.ExtensionFilter;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class BrowserNavigationBar extends HBox {
-
+    public String protocol = "\t\tProtocol: ";
+    public int port = 80;
     public BrowserNavigationBar(WebView webView, String homePageUrl, boolean goToHomePage)
     {
         // Set Spacing
@@ -49,7 +49,12 @@ public class BrowserNavigationBar extends HBox {
             @Override
             public void handle(ActionEvent event)
             {
-                webEngine.load(pageUrl.getText());
+                if(parseUrl(pageUrl.getText())!=null){
+                    webEngine.load(pageUrl.getText());
+                    BrowserStatusBar.setUrlText(pageUrl.getText());
+                    BrowserStatusBar.setPort(port);
+                    BrowserStatusBar.setProtocol(protocol);
+                }
             }
         });
 
@@ -70,7 +75,12 @@ public class BrowserNavigationBar extends HBox {
             @Override
             public void handle(ActionEvent event)
             {
-                webEngine.reload();
+                if(parseUrl(pageUrl.getText())!=null){
+                    webEngine.reload();
+                    BrowserStatusBar.setUrlText(pageUrl.getText());
+                    BrowserStatusBar.setPort(port);
+                    BrowserStatusBar.setProtocol(protocol);
+                }
             }
         });
 
@@ -80,7 +90,12 @@ public class BrowserNavigationBar extends HBox {
             @Override
             public void handle(ActionEvent event)
             {
-                webEngine.load(pageUrl.getText());
+                if(parseUrl(pageUrl.getText())!=null){
+                    webEngine.load(pageUrl.getText());
+                    BrowserStatusBar.setUrlText(pageUrl.getText());
+                    BrowserStatusBar.setPort(port);
+                    BrowserStatusBar.setProtocol(protocol);
+                }
             }
         });
 
@@ -90,7 +105,12 @@ public class BrowserNavigationBar extends HBox {
             @Override
             public void handle(ActionEvent event)
             {
-                webEngine.load(homePageUrl);
+                if(parseUrl(homePageUrl)!=null){
+                    webEngine.load(homePageUrl);
+                    BrowserStatusBar.setUrlText(pageUrl.getText());
+                    BrowserStatusBar.setPort(port);
+                    BrowserStatusBar.setProtocol(protocol);
+                }
             }
         });
 
@@ -100,7 +120,27 @@ public class BrowserNavigationBar extends HBox {
         if (goToHomePage)
         {
             // Load the URL
-            webEngine.load(homePageUrl);
+            if(parseUrl(homePageUrl)!=null){
+                webEngine.load(homePageUrl);
+                BrowserStatusBar.setUrlText(pageUrl.getText());
+                BrowserStatusBar.setPort(port);
+                BrowserStatusBar.setProtocol(protocol);
+            }
         }
+    }
+    //parses url and extracts url information
+    public String parseUrl(String url){
+        // Create a URL
+        try {
+
+            URL myUrl = new URL(url);
+            protocol = myUrl.getProtocol();
+            port = myUrl.getPort();
+            return ""+myUrl;
+        }
+        catch (MalformedURLException e) {
+            System.out.println("Malformed URL: " + e.getMessage());
+        }
+        return null;
     }
 }

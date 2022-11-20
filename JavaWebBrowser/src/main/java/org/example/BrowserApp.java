@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -12,7 +11,7 @@ import javafx.stage.Stage;
 public class BrowserApp extends Application
 {
 	//set homepage url
-	private String homePageUrl = "http://www.uni-prizren.com";
+	private String homePageUrl = "http://www.google.com";
 
 	@Override
 	public void start(final Stage stage)
@@ -33,9 +32,11 @@ public class BrowserApp extends Application
 
 		// Create the Navigation Bar
 		BrowserNavigationBar navigationBar = new BrowserNavigationBar(webView, homePageUrl, true);
-
+		//Create the status bar
+		BrowserStatusBar statusBar=new BrowserStatusBar(
+				navigationBar.parseUrl(homePageUrl),navigationBar.protocol,navigationBar.port);
 		// Create the VBox
-		VBox root = new VBox(navigationBar, webView);
+		VBox root = new VBox(navigationBar,webView,statusBar);
 
 		// Set the Style-properties of the VBox
 		root.setStyle("-fx-padding: 10;" +
