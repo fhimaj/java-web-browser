@@ -12,6 +12,8 @@ public class BrowserApp extends Application
 {
 	//set homepage url
 	private String homePageUrl = "http://www.google.com";
+	private BrowserNavigationBar navigationBar;
+	BrowserStatusBar statusBar;
 
 	@Override
 	public void start(final Stage stage)
@@ -31,10 +33,11 @@ public class BrowserApp extends Application
 		});
 
 		// Create the Navigation Bar
-		BrowserNavigationBar navigationBar = new BrowserNavigationBar(webView, homePageUrl, true);
+		navigationBar = new BrowserNavigationBar(webView, homePageUrl, true);
 		//Create the status bar
-		BrowserStatusBar statusBar=new BrowserStatusBar(
+		statusBar=new BrowserStatusBar(
 				navigationBar.parseUrl(homePageUrl),navigationBar.protocol,navigationBar.port);
+
 		// Create the VBox
 		VBox root = new VBox(navigationBar,webView,statusBar);
 
@@ -57,5 +60,7 @@ public class BrowserApp extends Application
 	public static void main(String[] args)
 	{
 		Application.launch(args);
+
 	}
+
 }
