@@ -39,6 +39,10 @@ public class BrowserNavigationBar extends HBox {
         Button refreshButton = new Button("Refresh");
         Button goButton = new Button("Go");
         Button homeButton = new Button("Home");
+        
+        Button backButton = new Button("Back");
+        Button goForward = new Button("Forward");
+        Button History = new Button("History");
 
         // Let the TextField grow horizontallly
         HBox.setHgrow(pageUrl, Priority.ALWAYS);
@@ -113,9 +117,25 @@ public class BrowserNavigationBar extends HBox {
                 }
             }
         });
+        
+        backButton.setOnAction(event -> webView.getEngine().getHistory().go(-1));
+        goForward.setOnAction(event -> webView.getEngine().getHistory().go(1));
+
+        History.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                List<WebHistory.Entry> history = webView.getEngine().getHistory().getEntries();
+                for (WebHistory.Entry entry : history) {
+                    System.out.println(entry.getUrl());
+                    System.out.println(entry.getTitle());
+                    System.out.println(entry.getLastVisitedDate());
+                }
+
+            }
+        });
 
         // Add the Children to the Navigation Bar
-        this.getChildren().addAll(pageUrl,goButton, refreshButton, homeButton);
+        this.getChildren().addAll(pageUrl,goButton, refreshButton, homeButton,backButton , goForward , History);
 
         if (goToHomePage)
         {
