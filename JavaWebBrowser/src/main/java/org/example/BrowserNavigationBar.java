@@ -10,12 +10,15 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.HBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class BrowserNavigationBar extends HBox {
     public String protocol = "\t\tProtocol: ";
-    public int port = 80;
+    public int port ;
     public BrowserNavigationBar(WebView webView, String homePageUrl, boolean goToHomePage)
     {
         // Set Spacing
@@ -95,10 +98,10 @@ public class BrowserNavigationBar extends HBox {
                     BrowserStatusBar.setUrlText(pageUrl.getText());
                     BrowserStatusBar.setPort(port);
                     BrowserStatusBar.setProtocol(protocol);
+                    BrowserHistory.saveHistory();
                 }
             }
         });
-
         // Add an ActionListener for the Home Button
         homeButton.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -110,6 +113,7 @@ public class BrowserNavigationBar extends HBox {
                     BrowserStatusBar.setUrlText(pageUrl.getText());
                     BrowserStatusBar.setPort(port);
                     BrowserStatusBar.setProtocol(protocol);
+                    BrowserHistory.saveHistory();
                 }
             }
         });
@@ -125,6 +129,7 @@ public class BrowserNavigationBar extends HBox {
                 BrowserStatusBar.setUrlText(pageUrl.getText());
                 BrowserStatusBar.setPort(port);
                 BrowserStatusBar.setProtocol(protocol);
+                BrowserHistory.saveHistory();
             }
         }
     }
@@ -132,7 +137,6 @@ public class BrowserNavigationBar extends HBox {
     public String parseUrl(String url){
         // Create a URL
         try {
-
             URL myUrl = new URL(url);
             protocol = myUrl.getProtocol();
             port = myUrl.getPort();
