@@ -39,7 +39,7 @@ public class BrowserHistory extends HBox
         this.setSpacing(4);
 
         // Set the Style-properties of the BrowserHistory navigation Bar
-        this.setStyle("-fx-padding: 2;");
+        this.setStyle("-fx-padding: 1;");
 
         // Create the WebHistory
         history = webView.getEngine().getHistory();
@@ -49,7 +49,7 @@ public class BrowserHistory extends HBox
         backButton.setDisable(true);
         Button forwardButton = new Button("\uD83E\uDCA5");
         forwardButton.setDisable(true);
-        Button historyButton=new Button("History");
+        Button historyButton=new Button("\uD83D\uDCD3");
 
         // Add an ActionListener to the Back and Forward Buttons
         backButton.setOnAction(new EventHandler<ActionEvent>()
