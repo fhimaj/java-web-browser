@@ -39,9 +39,9 @@ public class BrowserNavigationBar extends HBox {
         TextField pageUrl = new TextField();
 
         // Create the Buttons
-        Button refreshButton = new Button("Refresh");
-        Button goButton = new Button("Go");
-        Button homeButton = new Button("Home");
+        Button refreshButton = new Button("\u27F3");
+        Button goButton = new Button("\uD83D\uDD0E");
+        Button homeButton = new Button("\uD83C\uDFE0");
 
         // Let the TextField grow horizontallly
         HBox.setHgrow(pageUrl, Priority.ALWAYS);
