@@ -17,7 +17,10 @@ public class BrowserApp extends Application
 	private String homePageUrl = "http://www.google.com";
 	private BrowserNavigationBar navigationBar;
 	public BrowserStatusBar statusBar;
+    	Settings settings = new Settings();
 	public static TabPane tabs=new TabPane();
+	
+
 
 	@Override
 	public void start(final Stage stage)
@@ -49,6 +52,16 @@ public class BrowserApp extends Application
 		//Create the status bar
 		statusBar=new BrowserStatusBar(
 				navigationBar.parseUrl(homePageUrl),navigationBar.protocol,navigationBar.port);
+			
+		//Create the Button to show Settings
+		Button showSettingsButton = new Button();
+        	showSettingsButton.setText("\uD83D\uDD27");
+        	showSettingsButton.setOnAction(event -> {
+            	Label settingsLabel=new Label("Settings");
+            	settingsLabel.setFont(Font.font(30));
+            	settings.showSettings();
+        	});
+       		 navigationBar.getChildren().add(showSettingsButton);
 
 		//create a layout manager
 		GridPane tabContent=new GridPane();
