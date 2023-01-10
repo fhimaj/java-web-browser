@@ -4,12 +4,17 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+
+import java.beans.EventHandler;
 
 public class BrowserApp extends Application
 {
@@ -17,10 +22,8 @@ public class BrowserApp extends Application
 	private String homePageUrl = "http://www.google.com";
 	private BrowserNavigationBar navigationBar;
 	public BrowserStatusBar statusBar;
-    	Settings settings = new Settings();
+    Settings settings = new Settings();
 	public static TabPane tabs=new TabPane();
-	
-
 
 	@Override
 	public void start(final Stage stage)
@@ -49,6 +52,7 @@ public class BrowserApp extends Application
 		navigationBar = new BrowserNavigationBar(webView, homePageUrl, true);
 		//add browserHistory to navogation bar
 		navigationBar.getChildren().add(browserHistory);
+		navigationBar.setPrefWidth(stage.getWidth());
 		//Create the status bar
 		statusBar=new BrowserStatusBar(
 				navigationBar.parseUrl(homePageUrl),navigationBar.protocol,navigationBar.port);
@@ -84,10 +88,31 @@ public class BrowserApp extends Application
 				"-fx-border-radius: 5;" +
 				"-fx-border-color: gray;");
 
+		//set initial size of stage
+		stage.setMaximized(true);
+
 		// Add the Scene to the Stage
 		stage.setScene(scene);
 		// Display the Stage
 		stage.show();
+
+		//set initial size of navigationBar,statusBar and webView
+		navigationBar.setPrefWidth(stage.getWidth());
+		statusBar.setPrefWidth(stage.getWidth());
+		webView.setPrefWidth(stage.getWidth());
+
+		//listen for changes in width or height size
+		stage.widthProperty().addListener((obs, oldVal, newVal) -> {
+			// change width of navigationBar,StatusBar and WebView
+			navigationBar.setPrefWidth(stage.getWidth());
+			statusBar.setPrefWidth(stage.getWidth());
+			webView.setPrefWidth(stage.getWidth());
+		});
+
+		stage.heightProperty().addListener((obs, oldVal, newVal) -> {
+			// change height of WebView
+			webView.setPrefHeight(stage.getHeight());
+		});
 	}
 
 	public static void main(String[] args)
