@@ -15,9 +15,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 public class BrowserNavigationBar extends HBox {
     public String protocol = "\t\tProtocol: ";
+    public TextField pageUrl;
     public int port ;
     public BrowserNavigationBar(WebView webView, String homePageUrl, boolean goToHomePage)
     {
@@ -36,7 +39,7 @@ public class BrowserNavigationBar extends HBox {
         WebEngine webEngine = webView.getEngine();
 
         // Create the TextField
-        TextField pageUrl = new TextField();
+        pageUrl = new TextField();
 
         // Create the Buttons
         Button refreshButton = new Button("\u27F3");
@@ -52,7 +55,7 @@ public class BrowserNavigationBar extends HBox {
             @Override
             public void handle(ActionEvent event)
             {
-                if(parseUrl(pageUrl.getText())!=null){
+                if(parseUrl(pageUrl.getText())){
                     webEngine.load(pageUrl.getText());
                     BrowserStatusBar.setUrlText(pageUrl.getText());
                     BrowserStatusBar.setPort(port);
@@ -78,7 +81,7 @@ public class BrowserNavigationBar extends HBox {
             @Override
             public void handle(ActionEvent event)
             {
-                if(parseUrl(pageUrl.getText())!=null){
+                if(parseUrl(pageUrl.getText())){
                     webEngine.reload();
                     BrowserStatusBar.setUrlText(pageUrl.getText());
                     BrowserStatusBar.setPort(port);
@@ -93,7 +96,7 @@ public class BrowserNavigationBar extends HBox {
             @Override
             public void handle(ActionEvent event)
             {
-                if(parseUrl(pageUrl.getText())!=null){
+                if(parseUrl(pageUrl.getText())){
                     webEngine.load(pageUrl.getText());
                     BrowserStatusBar.setUrlText(pageUrl.getText());
                     BrowserStatusBar.setPort(port);
@@ -108,7 +111,7 @@ public class BrowserNavigationBar extends HBox {
             @Override
             public void handle(ActionEvent event)
             {
-                if(parseUrl(homePageUrl)!=null){
+                if(parseUrl(homePageUrl)){
                     webEngine.load(homePageUrl);
                     BrowserStatusBar.setUrlText(pageUrl.getText());
                     BrowserStatusBar.setPort(port);
@@ -124,7 +127,7 @@ public class BrowserNavigationBar extends HBox {
         if (goToHomePage)
         {
             // Load the URL
-            if(parseUrl(homePageUrl)!=null){
+            if(parseUrl(homePageUrl)){
                 webEngine.load(homePageUrl);
                 BrowserStatusBar.setUrlText(pageUrl.getText());
                 BrowserStatusBar.setPort(port);
@@ -134,17 +137,42 @@ public class BrowserNavigationBar extends HBox {
         }
     }
     //parses url and extracts url information
-    public String parseUrl(String url){
+    public boolean parseUrl(String url){
+        String myString="http://";
+        String googleQuery="https://www.google.com/search?q=";
+        //temporary solution
+        List<String> urlSuffixes=Arrays.asList(".com",".org",".net",".edu",".mil",".tech",".info",".al",".uk",".us");
         // Create a URL
         try {
-            URL myUrl = new URL(url);
+            URL myUrl = new URL(myString);
             protocol = myUrl.getProtocol();
             port = myUrl.getPort();
-            return ""+myUrl;
+
+            if(!url.contains(".")){
+                pageUrl.setText(googleQuery+url);
+                return true;
+            }
+            if(!urlSuffixes.contains(url.substring((url.lastIndexOf("."))))){
+                pageUrl.setText(googleQuery+url);
+                return true;
+            }
+            if(!url.contains("www") && !url.contains("http") && !url.contains("https")){
+                myString+="www."+url;
+                pageUrl.setText(myString);
+                return true;
+            }
+            if(!url.contains("http") && !url.contains("https")){
+                myString+=url;
+                pageUrl.setText(myString);
+                return true;
+            }
+            pageUrl.setText(googleQuery+url);
+            return true;
+
         }
         catch (MalformedURLException e) {
             System.out.println("Malformed URL: " + e.getMessage());
         }
-        return null;
+        return false;
     }
 }
