@@ -148,7 +148,7 @@ public class BrowserNavigationBar extends HBox {
             protocol = myUrl.getProtocol();
             port = myUrl.getPort();
 
-            if(!url.contains(".")){
+            if(!url.contains(".") || url.contains(" ")){
                 pageUrl.setText(googleQuery+url);
                 return true;
             }
