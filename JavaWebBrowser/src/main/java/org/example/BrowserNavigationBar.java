@@ -22,6 +22,7 @@ public class BrowserNavigationBar extends HBox {
     public String protocol = "\t\tProtocol: ";
     public TextField pageUrl;
     public int port ;
+    boolean reloaded=false;
     public BrowserNavigationBar(WebView webView, String homePageUrl, boolean goToHomePage)
     {
         // Set Spacing
@@ -60,6 +61,7 @@ public class BrowserNavigationBar extends HBox {
                     BrowserStatusBar.setUrlText(pageUrl.getText());
                     BrowserStatusBar.setPort(port);
                     BrowserStatusBar.setProtocol(protocol);
+                    BrowserHistory.saveHistory();
                 }
             }
         });
@@ -81,6 +83,7 @@ public class BrowserNavigationBar extends HBox {
             @Override
             public void handle(ActionEvent event)
             {
+                reloaded=true;
                 if(parseUrl(pageUrl.getText())){
                     webEngine.reload();
                     BrowserStatusBar.setUrlText(pageUrl.getText());
@@ -138,37 +141,52 @@ public class BrowserNavigationBar extends HBox {
     }
     //parses url and extracts url information
     public boolean parseUrl(String url){
+        URL myUrl;
         String myString="http://";
         String googleQuery="https://www.google.com/search?q=";
         //temporary solution
         List<String> urlSuffixes=Arrays.asList(".com",".org",".net",".edu",".mil",".tech",".info",".al",".uk",".us");
         // Create a URL
         try {
-            URL myUrl = new URL(myString);
-            protocol = myUrl.getProtocol();
-            port = myUrl.getPort();
+            //so url isn't duplicated if all above conditions are not met on refresh
+            if(!reloaded){
+                if(!url.contains(".") || url.contains(" ")){
+                    pageUrl.setText(googleQuery+url);
+                    myUrl=new URL(googleQuery+url);
+                    protocol = myUrl.getProtocol();
+                    port = myUrl.getPort();
+                    return true;
+                }
+                if(!urlSuffixes.contains(url.substring((url.lastIndexOf("."))))){
+                    pageUrl.setText(googleQuery+url);
+                    myUrl=new URL(googleQuery+url);
+                    protocol = myUrl.getProtocol();
+                    port = myUrl.getPort();
+                    return true;
+                }
+                if(!url.contains("www") && !url.contains("http") && !url.contains("https")){
+                    myString+="www."+url;
+                    pageUrl.setText(myString);
+                    myUrl=new URL(googleQuery+url);
+                    protocol = myUrl.getProtocol();
+                    port = myUrl.getPort();
+                    return true;
+                }
+                if(!url.contains("http") && !url.contains("https")){
+                    myString+=url;
+                    pageUrl.setText(myString);
+                    myUrl=new URL(googleQuery+url);
+                    protocol = myUrl.getProtocol();
+                    port = myUrl.getPort();
+                    return true;
+                }
 
-            if(!url.contains(".") || url.contains(" ")){
                 pageUrl.setText(googleQuery+url);
+                myUrl=new URL(googleQuery+url);
+                protocol = myUrl.getProtocol();
+                port = myUrl.getPort();
                 return true;
             }
-            if(!urlSuffixes.contains(url.substring((url.lastIndexOf("."))))){
-                pageUrl.setText(googleQuery+url);
-                return true;
-            }
-            if(!url.contains("www") && !url.contains("http") && !url.contains("https")){
-                myString+="www."+url;
-                pageUrl.setText(myString);
-                return true;
-            }
-            if(!url.contains("http") && !url.contains("https")){
-                myString+=url;
-                pageUrl.setText(myString);
-                return true;
-            }
-            pageUrl.setText(googleQuery+url);
-            return true;
-
         }
         catch (MalformedURLException e) {
             System.out.println("Malformed URL: " + e.getMessage());
