@@ -121,21 +121,29 @@ public class BrowserHistory extends HBox
 
     //save history to json file
     public static void saveHistory(){
-
+        String filePath="src/main/resources/history.json";
+        ArrayList<HistoryEntry> historyEntries;
         FileWriter fw;
         try{
             //read the content from json file first
             Gson gson=new Gson();
-            FileReader fr = new FileReader("src/main/resources/history.json");
-            java.lang.reflect.Type listType = new TypeToken<ArrayList<HistoryEntry> >(){}.getType();
-            ArrayList<HistoryEntry> historyEntries = gson.fromJson(fr, listType);
-            //check if there are no entries in json file
-            if(historyEntries==null){
-                historyEntries=new ArrayList<HistoryEntry>();
+            //check if file exists before reading it
+            File f = new File(filePath);
+            if(f.exists() && !f.isDirectory()) {
+                FileReader fr = new FileReader(filePath);
+                java.lang.reflect.Type listType = new TypeToken<ArrayList<HistoryEntry> >(){}.getType();
+                historyEntries = gson.fromJson(fr, listType);
+                //check if there are no entries in json file
+                if(historyEntries==null){
+                    historyEntries=new ArrayList<HistoryEntry>();
+                }
+                fr.close();
             }
-            fr.close();
+            else{
+                historyEntries=new ArrayList<>();
+            }
 
-            fw=new FileWriter("src/main/resources/history.json");
+            fw=new FileWriter(filePath);
             myHistoryList=history.getEntries();
             ArrayList<HistoryEntry> list= entryListToStringList(myHistoryList);
             for (HistoryEntry e:list) {
@@ -153,10 +161,23 @@ public class BrowserHistory extends HBox
 
     //read history from file
     public void readHistory(){
+        String filePath="src/main/resources/history.json";
         FileReader fr;
         try{
             Gson gson=new Gson();
-            fr=new FileReader("src/main/resources/history.json");
+            //check if file exists before reading it
+            File f = new File(filePath);
+            if(f.exists() && !f.isDirectory()) {
+                fr = new FileReader(filePath);
+                java.lang.reflect.Type listType = new TypeToken<ArrayList<HistoryEntry> >(){}.getType();
+                historyData = gson.fromJson(fr, listType);
+                fr.close();
+
+            }
+            else{//there is no history file, create an empty json file
+                new File(filePath);
+            }
+            fr=new FileReader(filePath);
             java.lang.reflect.Type listType = new TypeToken<ArrayList<HistoryEntry>>(){}.getType();
             historyData = gson.fromJson(fr, listType);
             fr.close();
