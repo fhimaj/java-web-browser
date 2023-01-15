@@ -15,6 +15,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import java.beans.EventHandler;
+import java.util.ArrayList;
 
 public class BrowserApp extends Application
 {
@@ -24,6 +25,7 @@ public class BrowserApp extends Application
 	public BrowserStatusBar statusBar;
     Settings settings = new Settings();
 	public static TabPane tabs=new TabPane();
+	public BrowserBookmarkBar browserBookmarksBar;
 
 	@Override
 	public void start(final Stage stage)
@@ -55,8 +57,10 @@ public class BrowserApp extends Application
 		navigationBar.setPrefWidth(stage.getWidth());
 		//Create the status bar
 		statusBar=new BrowserStatusBar(
-				navigationBar.parseUrl(homePageUrl),navigationBar.protocol,navigationBar.port);
-			
+				homePageUrl,navigationBar.protocol,navigationBar.port);
+		//create bookmarksbar
+		browserBookmarksBar=new BrowserBookmarkBar(webView);
+
 		//Create the Button to show Settings
 		Button showSettingsButton = new Button();
         	showSettingsButton.setText("\uD83D\uDD27");
@@ -73,8 +77,9 @@ public class BrowserApp extends Application
 		tabContent.setVgap(10);
 		tabContent.setPadding(new javafx.geometry.Insets(0, 10, 0, 10));
 		tabContent.add(navigationBar,0,0);
-		tabContent.add(webView,0,1);
-		tabContent.add(statusBar,0,2);
+		tabContent.add(browserBookmarksBar,0,1);
+		tabContent.add(webView,0,2);
+		tabContent.add(statusBar,0,3);
 		//create a tab
 		Tab homeTab=new Tab("Homepage");
 		homeTab.setContent(tabContent);
