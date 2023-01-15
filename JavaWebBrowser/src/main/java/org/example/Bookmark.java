@@ -1,3 +1,4 @@
+package org.example;
 public class Bookmark {
 
     //name of bookmark
@@ -18,5 +19,24 @@ public class Bookmark {
 
     public String getUrl() {
         return url;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if(obj==null){
+            return false;
+        }
+        if (!(obj instanceof Bookmark)) {
+            return false;
+        }
+
+        Bookmark other = (Bookmark) obj;
+
+       if(this.name!=null && this.name.equals(other.name) && this.url!=null && this.url.equals(other.url)){
+           return true;
+       }
+       else{
+           return false;
+       }
+
     }
 }
