@@ -87,7 +87,7 @@ public class BrowserHistory extends HBox
                     backButton.setDisable(false);
                 }
 
-                if (currentIndex >= history.getEntries().size())
+                if (currentIndex >= history.getEntries().size()-1)
                 {
                     forwardButton.setDisable(true);
                 }
