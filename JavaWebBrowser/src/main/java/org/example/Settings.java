@@ -21,10 +21,10 @@ import java.util.Optional;
 public class Settings extends HBox {
 
     //Add a bookmarks list
-    private List<Bookmark> bookmarks = new ArrayList<>();
+    public static List<Bookmark> bookmarks = new ArrayList<Bookmark>();
 
     //Method to add a new bookmark
-    public void addBookmark(String name, String url) {
+    public static void addBookmark(String name, String url) {
         bookmarks.add(new Bookmark(name, url));
     }
 
@@ -133,8 +133,9 @@ public class Settings extends HBox {
         settingsWindow.show();
     }
 
-    public void readBookmarks(){
+    public static void readBookmarks(){
         String filePath="src/main/resources/bookmarks.json";
+        bookmarks=new ArrayList<>();
         FileReader fr;
         try{
             Gson gson=new Gson();
@@ -145,22 +146,21 @@ public class Settings extends HBox {
                 java.lang.reflect.Type listType = new TypeToken<ArrayList<Bookmark> >(){}.getType();
                 bookmarks = gson.fromJson(fr, listType);
                 fr.close();
-
             }
             else{//there is no history file, create an empty json file
                 File fi=new File(filePath);
                 fi.createNewFile();
+                fr=new FileReader(filePath);
+                java.lang.reflect.Type listType = new TypeToken<ArrayList<Bookmark>>(){}.getType();
+                bookmarks = gson.fromJson(fr, listType);
+                fr.close();
             }
-            fr=new FileReader(filePath);
-            java.lang.reflect.Type listType = new TypeToken<ArrayList<Bookmark>>(){}.getType();
-            bookmarks = gson.fromJson(fr, listType);
-            fr.close();
         }
         catch(Exception e){
             e.printStackTrace();
         }
     }
-    public void saveBookmarks(){
+    public static void saveBookmarks(){
         String filePath="src/main/resources/bookmarks.json";
         ArrayList<Bookmark> bookmarkEntries;
         FileWriter fw;
@@ -175,7 +175,7 @@ public class Settings extends HBox {
                 bookmarkEntries = gson.fromJson(fr, listType);
                 //check if there are no entries in json file
                 if(bookmarkEntries==null){
-                    bookmarkEntries=new ArrayList<Bookmark>();
+                    bookmarkEntries=new ArrayList<>();
                 }
                 fr.close();
             }
@@ -184,8 +184,9 @@ public class Settings extends HBox {
             }
 
             fw=new FileWriter(filePath);
-            for (Bookmark b:bookmarks) {
-                bookmarkEntries.add(b);
+            //add only last bookmark if it's not already added
+            if(!bookmarkEntries.contains(bookmarks.get(bookmarks.size()-1))){
+                bookmarkEntries.add(bookmarks.get(bookmarks.size()-1));
             }
             gson.toJson(bookmarkEntries,fw);
 

@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,12 +30,7 @@ public class BrowserNavigationBar extends HBox {
         this.setSpacing(4);
 
         // Set the Style-properties of the Navigation Bar
-        this.setStyle("-fx-padding: 10;" +
-                "-fx-border-style: solid inside;" +
-                "-fx-border-width: 2;" +
-                "-fx-border-insets: 5;" +
-                "-fx-border-radius: 5;" +
-                "-fx-border-color: gray;");
+        this.setStyle("-fx-padding: 10;" );
 
         // Create the WebEngine
         WebEngine webEngine = webView.getEngine();
@@ -46,6 +42,7 @@ public class BrowserNavigationBar extends HBox {
         Button refreshButton = new Button("\u27F3");
         Button goButton = new Button("\uD83D\uDD0E");
         Button homeButton = new Button("\uD83C\uDFE0");
+        Button bookmarkButton=new Button("\u2605");
 
         // Let the TextField grow horizontallly
         HBox.setHgrow(pageUrl, Priority.ALWAYS);
@@ -74,6 +71,26 @@ public class BrowserNavigationBar extends HBox {
             {
                 // Set the Title of the Stage
                 pageUrl.setText(newvalue);
+            }
+        });
+
+        //add actionlistener to bookmarkButton, if pressed add bookmark to bookmark list and save it to file
+        bookmarkButton.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                Bookmark b=new Bookmark(webEngine.getTitle(),pageUrl.getText());
+                Settings.readBookmarks();
+                if(Settings.bookmarks==null){
+                    Settings.bookmarks=new ArrayList<>();
+                    Settings.addBookmark(b.getName(),b.getUrl());
+                    Settings.saveBookmarks();
+                }
+                else if(!Settings.bookmarks.contains(b)){
+                    Settings.addBookmark(b.getName(),b.getUrl());
+                    Settings.saveBookmarks();
+                }
             }
         });
 
@@ -125,7 +142,7 @@ public class BrowserNavigationBar extends HBox {
         });
 
         // Add the Children to the Navigation Bar
-        this.getChildren().addAll(pageUrl,goButton, refreshButton, homeButton);
+        this.getChildren().addAll(bookmarkButton,pageUrl,goButton, refreshButton, homeButton);
 
         if (goToHomePage)
         {
@@ -149,7 +166,10 @@ public class BrowserNavigationBar extends HBox {
         // Create a URL
         try {
             //so url isn't duplicated if all above conditions are not met on refresh
-            if(!reloaded){
+            if(reloaded) {
+                return true;
+            }
+            else{
                 if(!url.contains(".") || url.contains(" ")){
                     pageUrl.setText(googleQuery+url);
                     myUrl=new URL(googleQuery+url);
@@ -187,6 +207,7 @@ public class BrowserNavigationBar extends HBox {
                 port = myUrl.getPort();
                 return true;
             }
+
         }
         catch (MalformedURLException e) {
             System.out.println("Malformed URL: " + e.getMessage());

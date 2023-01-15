@@ -177,11 +177,12 @@ public class BrowserHistory extends HBox
             else{//there is no history file, create an empty json file
                 File fi=new File(filePath);
                 fi.createNewFile();
+                fr=new FileReader(filePath);
+                java.lang.reflect.Type listType = new TypeToken<ArrayList<HistoryEntry>>(){}.getType();
+                historyData = gson.fromJson(fr, listType);
+                fr.close();
             }
-            fr=new FileReader(filePath);
-            java.lang.reflect.Type listType = new TypeToken<ArrayList<HistoryEntry>>(){}.getType();
-            historyData = gson.fromJson(fr, listType);
-            fr.close();
+
             createHistoryTable();//create historytableview
         }
         catch(Exception e){

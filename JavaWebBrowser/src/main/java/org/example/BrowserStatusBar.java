@@ -25,6 +25,7 @@ public class BrowserStatusBar extends HBox {
         protocol.setText("Protocol: "+p);
         port=new Label("Port: "+portIn);
 
+        this.setSpacing(5);
         // Set the Style-properties of the status Bar
         this.setStyle("-fx-padding: 10;" +
                 "-fx-opacity: 0;"+
