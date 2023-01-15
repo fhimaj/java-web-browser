@@ -1,5 +1,7 @@
 package org.example;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,6 +11,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +37,16 @@ public class Settings extends HBox {
         VBox root = new VBox();
         Scene scene = new Scene(root);
 
+        //read bookmarks
+        readBookmarks();
         //Create a list view to show the bookmarks
         ListView<Bookmark> bookmarksListView = new ListView<>();
+
+        if(bookmarks == null){
+            Bookmark b=new Bookmark("No bookmarks added!","");
+            bookmarks=new ArrayList<>();
+            bookmarks.add(b);
+        }
         bookmarksListView.setItems(FXCollections.observableArrayList(bookmarks));
         bookmarksListView.setCellFactory(param -> new ListCell<Bookmark>() {
             @Override
@@ -117,5 +129,33 @@ public class Settings extends HBox {
         //Show the window
         settingsWindow.setScene(scene);
         settingsWindow.show();
+    }
+
+    public void readBookmarks(){
+        String filePath="src/main/resources/bookmarks.json";
+        FileReader fr;
+        try{
+            Gson gson=new Gson();
+            //check if file exists before reading it
+            File f = new File(filePath);
+            if(f.exists() && !f.isDirectory()) {
+                fr = new FileReader(filePath);
+                java.lang.reflect.Type listType = new TypeToken<ArrayList<Bookmark> >(){}.getType();
+                bookmarks = gson.fromJson(fr, listType);
+                fr.close();
+
+            }
+            else{//there is no history file, create an empty json file
+                File fi=new File(filePath);
+                fi.createNewFile();
+            }
+            fr=new FileReader(filePath);
+            java.lang.reflect.Type listType = new TypeToken<ArrayList<Bookmark>>(){}.getType();
+            bookmarks = gson.fromJson(fr, listType);
+            fr.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }
