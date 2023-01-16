@@ -43,6 +43,8 @@ public class BrowserNavigationBar extends HBox {
         Button goButton = new Button("\uD83D\uDD0E");
         Button homeButton = new Button("\uD83C\uDFE0");
         Button bookmarkButton=new Button("\u2605");
+        Button zoomInButton = new Button("+");
+        Button zoomOutButton = new Button("-");
 
         // Let the TextField grow horizontallly
         HBox.setHgrow(pageUrl, Priority.ALWAYS);
@@ -140,9 +142,29 @@ public class BrowserNavigationBar extends HBox {
                 }
             }
         });
+        
+        // add actionlistener for zoomInButton
+        zoomInButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if (webView.getZoom() < 2) {
+                    webView.setZoom(webView.getZoom() + 0.1);
+                }
+            }
+        });
+
+        // add actionlistener for zoomOutButton
+        zoomOutButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if (webView.getZoom() > 0.1) {
+                    webView.setZoom(webView.getZoom() - 0.1);
+                }
+            }
+        });
 
         // Add the Children to the Navigation Bar
-        this.getChildren().addAll(bookmarkButton,pageUrl,goButton, refreshButton, homeButton);
+        this.getChildren().addAll(zoomInButton,zoomOutButton,bookmarkButton,pageUrl,goButton, refreshButton, homeButton);
 
         if (goToHomePage)
         {
