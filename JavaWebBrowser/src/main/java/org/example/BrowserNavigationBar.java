@@ -133,8 +133,8 @@ public class BrowserNavigationBar extends HBox {
             @Override
             public void handle(ActionEvent event)
             {
-                if(parseUrl(homePageUrl)){
-                    webEngine.load(homePageUrl);
+                if(parseUrl(BrowserApp.homePageUrl)){
+                    webEngine.load(BrowserApp.homePageUrl);
                     BrowserStatusBar.setUrlText(pageUrl.getText());
                     BrowserStatusBar.setPort(port);
                     BrowserStatusBar.setProtocol(protocol);
@@ -142,7 +142,8 @@ public class BrowserNavigationBar extends HBox {
                 }
             }
         });
-        
+
+
         // add actionlistener for zoomInButton
         zoomInButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -182,53 +183,50 @@ public class BrowserNavigationBar extends HBox {
     public boolean parseUrl(String url){
         URL myUrl;
         String myString="http://";
-        String googleQuery="https://www.google.com/search?q=";
+        String searchEngineQuery=BrowserApp.searchEngine;
         //temporary solution
         List<String> urlSuffixes=Arrays.asList(".com",".org",".net",".edu",".mil",".tech",".info",".al",".uk",".us");
         // Create a URL
         try {
             //so url isn't duplicated if all above conditions are not met on refresh
-            if(reloaded) {
-                return true;
-            }
-            else{
-                if(!url.contains(".") || url.contains(" ")){
-                    pageUrl.setText(googleQuery+url);
-                    myUrl=new URL(googleQuery+url);
+            if (!reloaded) {
+                if (!url.contains(".") || url.contains(" ")) {
+                    pageUrl.setText(searchEngineQuery + url);
+                    myUrl = new URL(searchEngineQuery + url);
                     protocol = myUrl.getProtocol();
                     port = myUrl.getPort();
                     return true;
                 }
-                if(!urlSuffixes.contains(url.substring((url.lastIndexOf("."))))){
-                    pageUrl.setText(googleQuery+url);
-                    myUrl=new URL(googleQuery+url);
+                if (!urlSuffixes.contains(url.substring((url.lastIndexOf("."))))) {
+                    pageUrl.setText(searchEngineQuery + url);
+                    myUrl = new URL(searchEngineQuery + url);
                     protocol = myUrl.getProtocol();
                     port = myUrl.getPort();
                     return true;
                 }
-                if(!url.contains("www") && !url.contains("http") && !url.contains("https")){
-                    myString+="www."+url;
+                if (!url.contains("www") && !url.contains("http") && !url.contains("https")) {
+                    myString += "www." + url;
                     pageUrl.setText(myString);
-                    myUrl=new URL(googleQuery+url);
+                    myUrl = new URL(searchEngineQuery + url);
                     protocol = myUrl.getProtocol();
                     port = myUrl.getPort();
                     return true;
                 }
-                if(!url.contains("http") && !url.contains("https")){
-                    myString+=url;
+                if (!url.contains("http") && !url.contains("https")) {
+                    myString += url;
                     pageUrl.setText(myString);
-                    myUrl=new URL(googleQuery+url);
+                    myUrl = new URL(searchEngineQuery + url);
                     protocol = myUrl.getProtocol();
                     port = myUrl.getPort();
                     return true;
                 }
 
-                pageUrl.setText(googleQuery+url);
-                myUrl=new URL(googleQuery+url);
+                pageUrl.setText(searchEngineQuery + url);
+                myUrl = new URL(searchEngineQuery + url);
                 protocol = myUrl.getProtocol();
                 port = myUrl.getPort();
-                return true;
             }
+            return true;
 
         }
         catch (MalformedURLException e) {

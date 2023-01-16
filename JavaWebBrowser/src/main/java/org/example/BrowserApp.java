@@ -20,16 +20,25 @@ import java.util.ArrayList;
 public class BrowserApp extends Application
 {
 	//set homepage url
-	private String homePageUrl = "http://www.google.com";
+	public static String homePageUrl;
+	public static String searchEngine;
 	private BrowserNavigationBar navigationBar;
 	public BrowserStatusBar statusBar;
     Settings settings = new Settings();
 	public static TabPane tabs=new TabPane();
 	public BrowserBookmarkBar browserBookmarksBar;
 
+
 	@Override
 	public void start(final Stage stage)
 	{
+		//read configurations first
+		Settings.readConfig();
+		//set homepage
+		homePageUrl = Settings.homepage;
+		//set searchEngine
+		searchEngine = Settings.currentSearchEngine;
+
 		// Create the WebView
 		WebView webView = new WebView();
 		// Create the VBox
