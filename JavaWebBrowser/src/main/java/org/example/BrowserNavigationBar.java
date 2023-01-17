@@ -195,6 +195,7 @@ public class BrowserNavigationBar extends HBox {
                     myUrl = new URL(searchEngineQuery + url);
                     protocol = myUrl.getProtocol();
                     port = myUrl.getPort();
+                    reloaded=false;
                     return true;
                 }
                 if (!urlSuffixes.contains(url.substring((url.lastIndexOf("."))))) {
@@ -202,6 +203,7 @@ public class BrowserNavigationBar extends HBox {
                     myUrl = new URL(searchEngineQuery + url);
                     protocol = myUrl.getProtocol();
                     port = myUrl.getPort();
+                    reloaded=false;
                     return true;
                 }
                 if (!url.contains("www") && !url.contains("http") && !url.contains("https")) {
@@ -210,6 +212,7 @@ public class BrowserNavigationBar extends HBox {
                     myUrl = new URL(searchEngineQuery + url);
                     protocol = myUrl.getProtocol();
                     port = myUrl.getPort();
+                    reloaded=false;
                     return true;
                 }
                 if (!url.contains("http") && !url.contains("https")) {
@@ -218,14 +221,18 @@ public class BrowserNavigationBar extends HBox {
                     myUrl = new URL(searchEngineQuery + url);
                     protocol = myUrl.getProtocol();
                     port = myUrl.getPort();
+                    reloaded=false;
                     return true;
                 }
 
-                pageUrl.setText(searchEngineQuery + url);
+                /*pageUrl.setText(searchEngineQuery + url);
                 myUrl = new URL(searchEngineQuery + url);
                 protocol = myUrl.getProtocol();
-                port = myUrl.getPort();
+                port = myUrl.getPort();*/
+                reloaded=false;
+                return true;
             }
+            reloaded=false;
             return true;
 
         }
