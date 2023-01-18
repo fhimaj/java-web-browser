@@ -111,6 +111,13 @@ public class Settings extends HBox {
         setSearchEngineButton.setPadding(new Insets(10));
         setSearchEngineButton.setPrefWidth(150);
         setSearchEngineButton.setPrefHeight(40);
+        
+        //Create the exit button
+        Button exitButton = new Button("Exit");
+        exitButton.setPadding(new Insets(10));
+        exitButton.setPrefWidth(150);
+        exitButton.setPrefHeight(40);
+
 
         //Event to create a bookmark
         addBookmarkButton.setOnAction(event -> {
@@ -173,12 +180,16 @@ public class Settings extends HBox {
 
         //Event to show the Bookmarks
         showBookmarksButton.setOnAction(event -> {showBookmarks();});
+        
+         //Event to close the settings window
+        exitButton.setOnAction(event -> settingsWindow.close());
 
         //Add the showBookmarksButton , addBookmarkButton to root
         root.getChildren().add(addBookmarkButton);
         root.getChildren().add(showBookmarksButton);
         root.getChildren().add(setHomepageButton);
         root.getChildren().add(setSearchEngineButton);
+        root.getChildren().add(exitButton);
 
         //Show the window
         settingsWindow.setScene(scene);
