@@ -1,5 +1,6 @@
 package org.example;
 
+
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -14,9 +15,6 @@ import javafx.scene.text.Font;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
-import java.beans.EventHandler;
-import java.util.ArrayList;
-
 public class BrowserApp extends Application
 {
 	//set homepage url
@@ -27,6 +25,7 @@ public class BrowserApp extends Application
     Settings settings = new Settings();
 	public static TabPane tabs=new TabPane();
 	public BrowserBookmarkBar browserBookmarksBar;
+	public static WebView webView;
 
 
 	@Override
@@ -40,7 +39,7 @@ public class BrowserApp extends Application
 		searchEngine = Settings.currentSearchEngine;
 
 		// Create the WebView
-		WebView webView = new WebView();
+		webView = new WebView();
 		// Create the VBox
 		VBox root = new VBox(tabs);
 		// Create the Scene
@@ -59,16 +58,17 @@ public class BrowserApp extends Application
 		// Create BrowserHistory
 		BrowserHistory browserHistory = new BrowserHistory(webView);
 
+		//create bookmarksbar
+		browserBookmarksBar=new BrowserBookmarkBar(webView);
+
 		// Create the Navigation Bar
-		navigationBar = new BrowserNavigationBar(webView, homePageUrl, true);
+		navigationBar = new BrowserNavigationBar(webView, homePageUrl, true,browserBookmarksBar);
 		//add browserHistory to navogation bar
 		navigationBar.getChildren().add(browserHistory);
 		navigationBar.setPrefWidth(stage.getWidth());
 		//Create the status bar
 		statusBar=new BrowserStatusBar(
 				homePageUrl,navigationBar.protocol,navigationBar.port);
-		//create bookmarksbar
-		browserBookmarksBar=new BrowserBookmarkBar(webView);
 
 		//Create the Button to show Settings
 		Button showSettingsButton = new Button();

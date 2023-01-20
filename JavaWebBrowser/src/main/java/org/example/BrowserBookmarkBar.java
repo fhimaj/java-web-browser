@@ -9,8 +9,9 @@ import javafx.scene.web.WebView;
 
 import java.util.*;
 
+import static org.example.Settings.bookmarks;
+
 public class BrowserBookmarkBar extends HBox {
-    private Bookmark bookmark;
     private Button bookmarkLabel;
     public String url;
     private ArrayList<Button> bookmarksBtns=new ArrayList<>();
@@ -25,8 +26,13 @@ public class BrowserBookmarkBar extends HBox {
 
         //read bookmarks
         Settings.readBookmarks();
+        //add bookmarks
+        addBookmarks();
+        //show bookmark to bar
+        showButtonsBookmark();
+    }
 
-        //
+    public void addBookmarks(){
         if(Settings.bookmarks!=null){
             for(Bookmark b:Settings.bookmarks){
                 url=b.getUrl();
@@ -37,19 +43,42 @@ public class BrowserBookmarkBar extends HBox {
                 bookmarksUrls.add(url);
             }
         }
+    }
 
+    public void showButtonsBookmark(){
         for(Button b:bookmarksBtns){
             b.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>()
             {
                 @Override
                 public void handle(javafx.event.ActionEvent event) {
-                    webView.getEngine().load(bookmarksUrls.get(bookmarksBtns.indexOf(b)));
+                    BrowserApp.webView.getEngine().load(bookmarksUrls.get(bookmarksBtns.indexOf(b)));
                 }
             });
-
             this.getChildren().add(b);
         }
+
     }
 
+    public void addLastBookmark(){
+        Bookmark b=Settings.bookmarks.get(bookmarks.size()-1);
+        url=b.getUrl();
+        bookmarkLabel=new Button(b.getName());
+        bookmarkLabel.setMaxWidth(80);
+        bookmarkLabel.setBackground(new Background(new BackgroundFill(Color.WHITESMOKE,null,null)));
+        bookmarksBtns.add(bookmarkLabel);
+        bookmarksUrls.add(url);
+    }
+
+    public void showLastButtonBookmark(){
+        Button b=bookmarksBtns.get(bookmarksBtns.size()-1);
+        b.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>()
+        {
+            @Override
+            public void handle(javafx.event.ActionEvent event) {
+                BrowserApp.webView.getEngine().load(bookmarksUrls.get(bookmarksBtns.indexOf(b)));
+            }
+        });
+        this.getChildren().add(b);
+    }
 
 }

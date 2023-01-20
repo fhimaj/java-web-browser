@@ -11,20 +11,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BrowserNavigationBar extends HBox {
-    public String protocol = "\t\tProtocol: ";
+public class BrowserNavigationBar extends HBox{
+    public String protocol;
     public TextField pageUrl;
     public int port ;
     boolean reloaded=false;
-    public BrowserNavigationBar(WebView webView, String homePageUrl, boolean goToHomePage)
+    private boolean urlWasChanged=false;
+    private BrowserBookmarkBar bookmarksBar;
+    public BrowserNavigationBar(WebView webView, String homePageUrl, boolean goToHomePage,BrowserBookmarkBar browserBookmarkBar)
     {
         // Set Spacing
         this.setSpacing(4);
@@ -34,6 +34,8 @@ public class BrowserNavigationBar extends HBox {
 
         // Create the WebEngine
         WebEngine webEngine = webView.getEngine();
+
+        bookmarksBar=browserBookmarkBar;
 
         // Create the TextField
         pageUrl = new TextField();
@@ -61,9 +63,19 @@ public class BrowserNavigationBar extends HBox {
                     BrowserStatusBar.setPort(port);
                     BrowserStatusBar.setProtocol(protocol);
                     BrowserHistory.saveHistory();
+                    urlWasChanged=true;
                 }
             }
         });
+
+       pageUrl.textProperty().addListener(new ChangeListener<String>() {
+           @Override
+           public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+               urlWasChanged=true;
+           }
+       });
+
+
 
         // Update the stage title when a new web page title is available
         webEngine.locationProperty().addListener(new ChangeListener<String>()
@@ -88,10 +100,14 @@ public class BrowserNavigationBar extends HBox {
                     Settings.bookmarks=new ArrayList<>();
                     Settings.addBookmark(b.getName(),b.getUrl());
                     Settings.saveBookmarks();
+                    bookmarksBar.addLastBookmark();
+                    bookmarksBar.showLastButtonBookmark();
                 }
                 else if(!Settings.bookmarks.contains(b)){
                     Settings.addBookmark(b.getName(),b.getUrl());
                     Settings.saveBookmarks();
+                    bookmarksBar.addLastBookmark();
+                    bookmarksBar.showLastButtonBookmark();
                 }
             }
         });
@@ -108,6 +124,7 @@ public class BrowserNavigationBar extends HBox {
                     BrowserStatusBar.setUrlText(pageUrl.getText());
                     BrowserStatusBar.setPort(port);
                     BrowserStatusBar.setProtocol(protocol);
+                    urlWasChanged=false;
                 }
             }
         });
@@ -118,12 +135,16 @@ public class BrowserNavigationBar extends HBox {
             @Override
             public void handle(ActionEvent event)
             {
-                if(parseUrl(pageUrl.getText())){
-                    webEngine.load(pageUrl.getText());
-                    BrowserStatusBar.setUrlText(pageUrl.getText());
-                    BrowserStatusBar.setPort(port);
-                    BrowserStatusBar.setProtocol(protocol);
-                    BrowserHistory.saveHistory();
+                if(urlWasChanged){
+                    if(parseUrl(pageUrl.getText())){
+                        webEngine.load(pageUrl.getText());
+                        BrowserStatusBar.setUrlText(pageUrl.getText());
+                        BrowserStatusBar.setPort(port);
+                        BrowserStatusBar.setProtocol(protocol);
+                        BrowserHistory.saveHistory();
+
+                        urlWasChanged=false;
+                    }
                 }
             }
         });
@@ -139,6 +160,8 @@ public class BrowserNavigationBar extends HBox {
                     BrowserStatusBar.setPort(port);
                     BrowserStatusBar.setProtocol(protocol);
                     BrowserHistory.saveHistory();
+
+                    urlWasChanged=false;
                 }
             }
         });
@@ -176,6 +199,8 @@ public class BrowserNavigationBar extends HBox {
                 BrowserStatusBar.setPort(port);
                 BrowserStatusBar.setProtocol(protocol);
                 BrowserHistory.saveHistory();
+
+                urlWasChanged=false;
             }
         }
     }
